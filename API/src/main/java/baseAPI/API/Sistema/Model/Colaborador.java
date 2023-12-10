@@ -25,6 +25,9 @@ public class Colaborador {
     private String sobrenome;
 
     @Column(unique = true)
+    private Long cpf;
+
+    @Column(unique = true)
     private Long telefone;
 
     private String email;
