@@ -2,7 +2,7 @@ package baseAPI.API.Seguranca.Model;
 
 public enum UserRole {
     ADMIN("admin"),
-    USER("user");
+    USER("user"),
 	TEC("tec");
 
     private String role;

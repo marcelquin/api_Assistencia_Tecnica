@@ -1,6 +1,6 @@
 package baseAPI.API.Sistema.Enum;
 
-public enum TipoPagamento {
+public enum SelecionarPagamento {
 
     DINHEIRO,
     DEBITO,
