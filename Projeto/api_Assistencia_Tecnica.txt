@@ -1,0 +1,68 @@
+API_ASSISTENCIA_TECNICA
+
+ENUM
+{
+
+StatusOS
+(AGUARDANDO_APROVACAO, APROVADO, REPROVADO, AGUARDANDO_RETIRADA, PRODUTO_ENTREGUE)
+
+Aparelho
+(CELULAR, TABLET, COMPUTADOR, NOTEBOOK)
+
+StatusPagamento
+(AGUARDANDO_PAGAMENTO, PAGAMENTO_CONFIRMADO)
+
+TipoPagamento
+(DINHEIRO, DEBITO, CREDITO)
+
+Departamento
+(ATENDIMENTO, TECNICO)
+
+}
+
+TABELAS
+{
+
+ENDERECO
+(Logradouro, numero, bairro, cep, cidade, estado)
+
+CLIENTE
+(nome, sobrenome, telefone, email, Endereco(1-1) OrdenServico<>(1-n))
+[pesquisar por: nome, telefone]
+
+COLABORADOR
+(nome, sobrenome, cpf, dataNascimento,telefone, email, Endereco(1-1), cargo(Departamento(), salario, cargaHorariaSemanal, Documentos(1-1 arquivos<>), dataEntrada, Demissao(razao, dataSaida))
+[pesquisar por: cpf]
+
+FORNECEDOR
+(nome, razaoSocial, cnpj, telefone, email, Endereco(), areaAtuacao)
+[pesquisar por:razaoSosial, cnpj]
+
+ITEMREPARO
+(Fornecedor(n-1), nome, descrisao, modelo, valor, dataEntrega)
+
+ORCAMENTO
+(Relato, Aparelho(), Cliente(1-n) dataEntrada, Colaboador)
+
+ORDEMSERVICO
+(Orcamento(1-n), codigoOS, StatusOS, defeito, valor, dataEntrada, dataFinalizacaoReparo, dataEntrega, StatusPagamento, TipoPagamento())
+[pesquisar por: codigoOS]
+
+}
+
+REGRA DE NEGOCIO
+{
+	Atendente {cadastro/editar cliente, busca cliente, gerarOrcamento,
+				buscarOrdemServico, finalizarOrdemServico}
+	Tecnico   {GerarOS, alterarOS, PedirItemReparo}
+	
+	ADMIN     {cadastro colaborador, cadastro fornecedor...}
+
+--------------------------------------------------------------------------
+	ORDEMSERVICO
+{
+	Pagamento_confirmado -> set(dataEntrega, StatusPagamento(pagamento_confirmado), StatusOS(Produto_Entregue))
+	Aguardando_Retirada -> set(dataFinalizacaoReparo, StatusPagamento(Aguardando_Pagamento) )
+}		
+
+}
