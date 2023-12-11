@@ -11,6 +11,6 @@ public interface FornecedorRepository extends JpaRepository<Fornecedor,Long> {
     Boolean existsByrazaoSocial(String razaoSocial);
     Boolean existsBycnpj(Long cnpj);
 
-    OrdemServico findByrazaoSocial(String razaoSocial);
-    OrdemServico findBycnpj(Long cnpj);
+    Fornecedor findByrazaoSocial(String razaoSocial);
+    Fornecedor findBycnpj(Long cnpj);
 }

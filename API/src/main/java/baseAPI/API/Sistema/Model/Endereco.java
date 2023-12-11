@@ -1,5 +1,9 @@
 package baseAPI.API.Sistema.Model;
 
+import baseAPI.API.Sistema.DTO.ClienteDTO;
+import baseAPI.API.Sistema.DTO.ColaboradorDTO;
+import baseAPI.API.Sistema.DTO.EnderecoDTO;
+import baseAPI.API.Sistema.DTO.FornecedorDTO;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -31,4 +35,33 @@ public class Endereco {
     private String cidade ;
 
     private String estado ;
+
+    public Endereco(ClienteDTO dto) {
+        Logradouro = dto.Logradouro();
+        this.numero = dto.numero();
+        this.bairro = dto.bairro();
+        this.cep = dto.cep();
+        this.cidade = dto.cidade();
+        this.estado = dto.estado();
+    }
+
+    public Endereco(FornecedorDTO dto) {
+        Logradouro = dto.Logradouro();
+        this.numero = dto.numero();
+        this.bairro = dto.bairro();
+        this.cep = dto.cep();
+        this.cidade = dto.cidade();
+        this.estado = dto.estado();
+    }
+
+    public Endereco(ColaboradorDTO dto) {
+        Logradouro = dto.Logradouro();
+        this.numero = dto.numero();
+        this.bairro = dto.bairro();
+        this.cep = dto.cep();
+        this.cidade = dto.cidade();
+        this.estado = dto.estado();
+    }
+
+
 }

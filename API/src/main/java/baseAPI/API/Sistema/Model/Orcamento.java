@@ -1,5 +1,6 @@
 package baseAPI.API.Sistema.Model;
 
+import baseAPI.API.Sistema.DTO.OrcamentoDTO;
 import baseAPI.API.Sistema.Enum.Aparelho;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
@@ -36,4 +37,9 @@ public class Orcamento {
     @ManyToOne
     @JoinColumn(name = "orcamento_colaborador_Id")
     private Colaborador colaborador;
+
+    public Orcamento(OrcamentoDTO dto) {
+        this.relatoCliente = dto.relatoCliente();
+        this.aparelho = dto.aparelho();
+    }
 }

@@ -1,5 +1,6 @@
 package baseAPI.API.Sistema.Model;
 
+import baseAPI.API.Sistema.DTO.ItemReparoDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Future;
@@ -37,4 +38,12 @@ public class ItemReparo {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataEntrega;
 
+
+    public ItemReparo(ItemReparoDTO dto) {
+        this.nome = dto.nome();
+        this.descrisao = dto.descrisao();
+        this.modelo = dto.modelo();
+        this.valor = dto.valor();
+        this.dataEntrega = dto.dataEntrega();
+    }
 }

@@ -1,5 +1,6 @@
 package baseAPI.API.Sistema.Model;
 
+import baseAPI.API.Sistema.DTO.OrdemServicoDTO;
 import baseAPI.API.Sistema.Enum.SelecionarPagamento;
 import baseAPI.API.Sistema.Enum.StatusOrdenServico;
 import baseAPI.API.Sistema.Enum.StatusPagamento;
@@ -10,6 +11,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @NoArgsConstructor
@@ -40,11 +42,11 @@ public class OrdemServico {
 
     private Double valor;
 
-    private LocalDate dataEntrada;
+    private LocalDateTime dataEntrada;
 
-    private LocalDate dataFinalizacaoReparo;
+    private LocalDateTime dataFinalizacaoReparo;
 
-    private LocalDate dataEntrega;
+    private LocalDateTime dataEntrega;
 
     @Enumerated(EnumType.STRING)
     private StatusPagamento statusPagamento;
@@ -52,5 +54,10 @@ public class OrdemServico {
     @Enumerated(EnumType.STRING)
     private SelecionarPagamento selecionarPagamento;
 
+    private Double valorAdicional;
 
+    public OrdemServico(OrdemServicoDTO dto) {
+        this.defeito = dto.defeito();
+        this.valor = dto.valor();
+    }
 }

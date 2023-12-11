@@ -1,11 +1,9 @@
 package baseAPI.API.Sistema.Model;
 
+import baseAPI.API.Sistema.DTO.ColaboradorDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -52,4 +50,14 @@ public class Colaborador {
     private LocalDate dataDesligamento;
 
     private String motivoDesligamento;
+
+    public Colaborador(ColaboradorDTO dto) {
+        this.nome = dto.nome();
+        this.sobrenome = dto.sobrenome();
+        this.cpf = dto.cep();
+        this.telefone = dto.telefone();
+        this.email = dto.email();
+        this.dataNascimento = dto.dataNascimento();
+        this.dataEntrada = dto.dataEntrada();
+    }
 }

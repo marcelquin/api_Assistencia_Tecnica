@@ -1,5 +1,6 @@
 package baseAPI.API.Sistema.Model;
 
+import baseAPI.API.Sistema.DTO.FornecedorDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,5 +31,13 @@ public class Fornecedor {
     @OneToOne
     @JoinColumn(name = "endereco_id", referencedColumnName = "id")
     private Endereco endereco;
+
+    public Fornecedor(FornecedorDTO dto) {
+        this.nome = dto.nome();
+        this.razaoSocial = dto.razaoSocial();
+        this.cnpj = dto.cnpj();
+        this.telefone = dto.telefone();
+        this.email = dto.email();
+    }
 
 }

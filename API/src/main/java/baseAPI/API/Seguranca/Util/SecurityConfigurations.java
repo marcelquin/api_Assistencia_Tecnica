@@ -31,6 +31,16 @@ public class SecurityConfigurations {
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/**", "/api-api-docs/swagger-config","/api-api-docs", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/auth/**", "/api-api-docs/swagger-config","/api-api-docs", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/api/v1/auth/**", "/api-api-docs/swagger-config","/api-api-docs", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                        //.requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+                        /*
+                        user -
+                        cliente get, post put
+                        orcamento get post put
+                        ordemservico filizarOS
+                         tec -
+                         ordemServico get post put
+                         restante - adm
+                         */
                         .anyRequest().hasAnyRole("USER","ADMIN", "TEC")
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

@@ -1,5 +1,6 @@
 package baseAPI.API.Sistema.Model;
 
+import baseAPI.API.Sistema.DTO.ClienteDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -40,5 +41,13 @@ public class Cliente {
     @OneToMany
     private List<OrdemServico> ordemServico;
 
+    private Boolean bloqueado;
 
+    public Cliente(ClienteDTO dto) {
+        this.nome = dto.nome();
+        this.sobrenome = dto.sobrenome();
+        this.telefone = dto.telefone();
+        this.email = dto.email();
+        this.dataNascimento = dto.dataNascimento();
+    }
 }

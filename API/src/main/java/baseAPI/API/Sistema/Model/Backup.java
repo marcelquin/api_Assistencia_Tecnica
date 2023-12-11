@@ -28,6 +28,14 @@ public class Backup {
     private Cliente cliente;
 
     @ManyToOne
+    @JoinColumn(name = "backup_colaborador_Id")
+    private Colaborador colaborador;
+
+    @ManyToOne
+    @JoinColumn(name = "backup_fornecedor_Id")
+    private Fornecedor fornecedor;
+
+    @ManyToOne
     @JoinColumn(name = "backup_orcamento_Id")
     private Orcamento orcamento;
 
