@@ -22,14 +22,14 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.*;
 
 @Service
-@RequiredArgsConstructor
 public class ClienteService {
 
-    private ClienteRepository clienteRepository;
-
-    private EnderecoRepository enderecoRepository;
-
-    private BackupRepository backupRepository;
+    @Autowired
+    ClienteRepository clienteRepository;
+    @Autowired
+    EnderecoRepository enderecoRepository;
+    @Autowired
+    BackupRepository backupRepository;
 
     public ResponseEntity <List<Cliente>> listarCliente() throws Exception
     {

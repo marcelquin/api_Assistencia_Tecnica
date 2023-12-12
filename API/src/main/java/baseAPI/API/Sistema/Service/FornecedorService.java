@@ -13,6 +13,7 @@ import baseAPI.API.Sistema.Repository.BackupRepository;
 import baseAPI.API.Sistema.Repository.EnderecoRepository;
 import baseAPI.API.Sistema.Repository.FornecedorRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -22,14 +23,13 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.*;
 
 @Service
-@RequiredArgsConstructor
 public class FornecedorService {
-
-    private FornecedorRepository fornecedorRepository;
-
-    private EnderecoRepository enderecoRepository;
-
-    private BackupRepository backupRepository;
+    @Autowired
+    FornecedorRepository fornecedorRepository;
+    @Autowired
+    EnderecoRepository enderecoRepository;
+    @Autowired
+    BackupRepository backupRepository;
 
     public ResponseEntity<List<Fornecedor>> listarCliente() throws Exception
     {
@@ -172,7 +172,7 @@ public class FornecedorService {
         return null;
     }
 
-    public ResponseEntity<FornecedorDTO> DeletarCliente(Long id) throws Exception
+    public ResponseEntity<FornecedorDTO> DeletarFornecedor(Long id) throws Exception
     {
         try
         {

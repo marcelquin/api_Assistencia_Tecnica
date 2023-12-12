@@ -3,10 +3,7 @@ package baseAPI.API.Sistema.Model;
 import baseAPI.API.Sistema.DTO.ClienteDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -14,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@ToString
 @EqualsAndHashCode(of = "id")
 @Entity
 public class Cliente {
@@ -37,9 +35,6 @@ public class Cliente {
     @OneToOne
     @JoinColumn(name = "endereco_id", referencedColumnName = "id")
     private Endereco endereco;
-
-    @OneToMany
-    private List<OrdemServico> ordemServico;
 
     private Boolean bloqueado;
 

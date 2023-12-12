@@ -107,17 +107,18 @@ public class ColaoradorService {
                 colaborador.setCargo(cargo);
                 colaborador.setEndereco(endereco);
                 boolean pasta = new File(caminhoImagem + "\\"+dto.nome()+"_"+dto.cargo()).mkdir();
-
                 for(MultipartFile file: files)
                 {
                     byte[] bytes = file.getBytes();
-                    Path caminho = Paths.get(caminhoImagem+dto.nome()+"_"+dto.cargo()+"_"+file.getOriginalFilename());
+                    Path caminho = Paths.get(caminhoImagem+dto.nome()+"_"+dto.cargo()+"\\"+dto.nome()+"_"+dto.cargo()+"_"+file.getOriginalFilename());
                     Files.write(caminho, bytes);
                     arquivos.add(dto.nome()+"_"+dto.cargo()+"_"+file.getOriginalFilename());
                 }
                 documentos.setArquivos(arquivos);
                 documentos.setDataEnvio(LocalDateTime.now());
                 documentosRepository.save(documentos);
+                colaborador.setDocumentos(documentos);
+                colaboradorRepository.save(colaborador);
                 Backup backup = new Backup();
                 backup.setAcaoBackup(SelecionarAcaoBackup.NOVO_COLABORADOR);
                 backup.setDataEvento(LocalDateTime.now());
@@ -171,7 +172,46 @@ public class ColaoradorService {
         return null;
     }
 
-    public ResponseEntity<ColaboradorDTO> AlterarEnderecoColaborador(Long id,EnderecoDTO dto, MultipartFile comprovanteEndereco) throws SQLException, IOException
+    public ResponseEntity<ColaboradorDTO> AdicionarArquivoColaborador(Long id,MultipartFile[] files)
+    {
+        try{
+            if(colaboradorRepository.existsById(id))
+            {
+                Colaborador colaborador = colaboradorRepository.findById(id).get();
+                if(documentosRepository.existsById(colaborador.getDocumentos().getId()))
+                {
+                    Documentos documentos = documentosRepository.findById(colaborador.getDocumentos().getId()).get();
+                    List<String> arquivos = new ArrayList<>();
+                    for(MultipartFile file: files)
+                    {
+                        byte[] bytes = file.getBytes();
+                        Path caminho = Paths.get(caminhoImagem+colaborador.getNome()+"_"+colaborador.getCargo()+"\\"+colaborador.getNome()+"_"+colaborador.getCargo()+"_"+file.getOriginalFilename());
+                        Files.write(caminho, bytes);
+                        arquivos.add(colaborador.getNome()+"_"+colaborador.getCargo()+"_"+file.getOriginalFilename());
+                    }
+                    arquivos.forEach(arquivo -> documentos.getArquivos().add(arquivo));
+                    documentosRepository.save(documentos);
+                    Backup backup = new Backup();
+                    backup.setAcaoBackup(SelecionarAcaoBackup.EDITAR_COLABORADOR);
+                    backup.setDataEvento(LocalDateTime.now());
+                    backup.setColaborador(colaborador);
+                    backupRepository.save(backup);
+                    return new ResponseEntity<>(OK);
+                }
+            }
+            else
+            {
+                return new ResponseEntity<>(BAD_REQUEST);
+            }
+        }catch (Exception e)
+        {
+            System.out.println("Ops algo deu errado!");
+            e.getStackTrace();
+        }
+        return null;
+    }
+
+    public ResponseEntity<ColaboradorDTO> AlterarEnderecoColaborador(Long id,EnderecoDTO dto, MultipartFile file) throws SQLException, IOException
     {
         try{
             if(colaboradorRepository.existsById(id))
@@ -187,28 +227,14 @@ public class ColaoradorService {
                     endereco.setCidade(dto.cidade());
                     endereco.setEstado(dto.estado());
                     enderecoRepository.save(endereco);
-                    if(documentosRepository.existsById(colaborador.getDocumentos().getId()))
-                    {
-                        Documentos documentos = documentosRepository.findById(colaborador.getDocumentos().getId()).get();
-                        if(!comprovanteEndereco.isEmpty())
-                        {
-                            byte[] bytes = comprovanteEndereco.getBytes();
-                            Path caminho = Paths.get(caminhoImagem+colaborador.getNome()+"_"+colaborador.getCargo()+"\\"+colaborador.getNome()+"_"+colaborador.getCargo()+"_"+comprovanteEndereco.getOriginalFilename());
-                            Files.write(caminho, bytes);
-                            documentos.getArquivos().add(colaborador.getCargo()+"_"+comprovanteEndereco.getOriginalFilename());
-                            documentos.setDataAtualizacao(LocalDateTime.now());
-                            documentosRepository.save(documentos);
-                        }
+                    Backup backup = new Backup();
+                    backup.setAcaoBackup(SelecionarAcaoBackup.EDITAR_COLABORADOR);
+                    backup.setDataEvento(LocalDateTime.now());
+                    backup.setColaborador(colaborador);
+                    backupRepository.save(backup);
+                    return new ResponseEntity<>(OK);
                     }
-
                 }
-                Backup backup = new Backup();
-                backup.setAcaoBackup(SelecionarAcaoBackup.EDITAR_COLABORADOR);
-                backup.setDataEvento(LocalDateTime.now());
-                backup.setColaborador(colaborador);
-                backupRepository.save(backup);
-                return new ResponseEntity<>(OK);
-            }
             else
             {
                 return new ResponseEntity<>(BAD_REQUEST);

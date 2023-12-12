@@ -1,14 +1,17 @@
 package baseAPI.API.Sistema.Model;
 
 import baseAPI.API.Sistema.DTO.OrdemServicoDTO;
+import baseAPI.API.Sistema.Enum.Aparelho;
 import baseAPI.API.Sistema.Enum.SelecionarPagamento;
 import baseAPI.API.Sistema.Enum.StatusOrdenServico;
 import baseAPI.API.Sistema.Enum.StatusPagamento;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,8 +29,21 @@ public class OrdemServico {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "ordemServico_orcamento_Id")
-    private Orcamento orcamento;
+    @JoinColumn(name = "ordemServico_cliente_Id")
+    private Cliente cliente;
+
+    @Enumerated(EnumType.STRING)
+    private Aparelho aparelho;
+
+    private String relatoCliente;
+
+    @ManyToOne
+    @JoinColumn(name = "ordemServico_colaborador_Id")
+    private Colaborador colaborador;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "reparo_id", referencedColumnName = "id")
+    private Reparo reparo;
 
     @Column(unique = true)
     private String codigo;
@@ -37,16 +53,25 @@ public class OrdemServico {
 
     private String defeito;
 
-    @OneToMany
-    private List<ItemReparo> itemsReparo;
+    private Double valorTotal;
 
-    private Double valor;
-
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime dataEntrada;
 
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
+    private LocalDateTime dataAprovacao;
+
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
+    private LocalDateTime dataAnalise;
+
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime dataFinalizacaoReparo;
 
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime dataEntrega;
+
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
+    private LocalDateTime datarecusado;
 
     @Enumerated(EnumType.STRING)
     private StatusPagamento statusPagamento;
@@ -54,10 +79,12 @@ public class OrdemServico {
     @Enumerated(EnumType.STRING)
     private SelecionarPagamento selecionarPagamento;
 
-    private Double valorAdicional;
+    private Boolean finalizado;
 
-    public OrdemServico(OrdemServicoDTO dto) {
-        this.defeito = dto.defeito();
-        this.valor = dto.valor();
+    public Double CalValorTotal()
+    {
+        Double porcentagem = (30.0/100);
+        this.valorTotal = (reparo.getValortotalReparo() * porcentagem) + reparo.getValortotalReparo();
+        return valorTotal;
     }
 }

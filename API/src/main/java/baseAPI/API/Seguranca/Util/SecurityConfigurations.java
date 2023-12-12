@@ -31,21 +31,22 @@ public class SecurityConfigurations {
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/**", "/api-api-docs/swagger-config","/api-api-docs", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/auth/**", "/api-api-docs/swagger-config","/api-api-docs", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/api/v1/auth/**", "/api-api-docs/swagger-config","/api-api-docs", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
-                        //.requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-                        /*
-                        user -
-                        cliente get, post put
-                        orcamento get post put
-                        ordemservico filizarOS
-                         tec -
-                         ordemServico get post put
-                         restante - adm
-                         */
-                        .anyRequest().hasAnyRole("USER","ADMIN", "TEC")
+                        .requestMatchers(HttpMethod.GET, "/cliente/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/cliente/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.PUT, "/cliente/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/Orcamento/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/Orcamento/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.PUT, "/Orcamento/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.PUT, "/OrdemServico/FinalizarOrdemServico").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/OrdemServico/**").hasRole("TEC")
+                        .requestMatchers(HttpMethod.POST, "/OrdemServico/**").hasRole("TEC")
+                        .requestMatchers(HttpMethod.PUT, "/OrdemServico/**").hasRole("TEC")
+                        .anyRequest().permitAll()//hasAnyRole("USER","ADMIN", "TEC")
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
+
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {

@@ -1,6 +1,7 @@
 package baseAPI.API.Sistema.Model;
 
 import baseAPI.API.Sistema.Enum.SelecionarAcaoBackup;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,9 +36,6 @@ public class Backup {
     @JoinColumn(name = "backup_fornecedor_Id")
     private Fornecedor fornecedor;
 
-    @ManyToOne
-    @JoinColumn(name = "backup_orcamento_Id")
-    private Orcamento orcamento;
 
     @ManyToOne
     @JoinColumn(name = "backup_ordemServico_Id")
@@ -45,6 +43,7 @@ public class Backup {
 
     private Double valor;
 
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime dataEvento;
 
 

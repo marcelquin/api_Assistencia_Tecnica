@@ -45,10 +45,13 @@ public class Colaborador {
     @JoinColumn(name = "colaborador_cargo_Id")
     private Cargo cargo;
 
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataEntrada;
 
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataDesligamento;
 
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private String motivoDesligamento;
 
     public Colaborador(ColaboradorDTO dto) {
