@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("OrdemServico")
-@Tag(name = "OrdemServico", description = "Manipulação de dados relacionados a entidade")
+@RequestMapping("ordemServico")
+@Tag(name = "ordemServico", description = "Manipulação de dados relacionados a entidade")
 public class OrdemServicoController {
 
     @Autowired
@@ -65,7 +65,7 @@ public class OrdemServicoController {
             @ApiResponse(responseCode = "500", description = "Ops algoo deu errado"),
     })
     @PostMapping()
-    public ResponseEntity<OrdemServicoDTO> NovaOrdemServico(@RequestParam Long idCLiente, @RequestParam Long idColaborador,@RequestParam Aparelho aparelho,@RequestParam String relatoCliente)
+    public ResponseEntity<OrdemServicoDTO> NovaOrdemServico(@RequestParam Long idCLiente, @RequestParam Long idColaborador,@RequestParam Aparelho aparelho,@RequestParam String relatoCliente) throws Exception
     {return service.NovaOrdemServico(idCLiente, idColaborador, aparelho, relatoCliente);}
 
 /*    @Operation(summary = "Faz o pedido da peça de reposição do reparo", method = "PUT")
@@ -122,6 +122,17 @@ public class OrdemServicoController {
     @PutMapping("/FinalizarOrdemServico")
     public ResponseEntity<OrdemServicoDTO> FinalizarOrdemServico(@RequestParam String codigo, @RequestParam SelecionarPagamento selecionarPagamento)
     { return service.FinalizarOrdemServico(codigo, selecionarPagamento);}
+
+    @Operation(summary = "Finaliza Ordem de Serviço não entregue", method = "PUT")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Editado com sucesso"),
+            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Ops algoo deu errado"),
+    })
+    @PutMapping("/ProdutoNaoRetirado")
+    public ResponseEntity<OrdemServicoDTO> ProdutoNaoRetirado(String codigo) throws Exception
+    { return service.ProdutoNaoRetirado(codigo);}
 
     @Operation(summary = "Deleta Registro na tabela", method = "DELETE")
     @ApiResponses(value = {

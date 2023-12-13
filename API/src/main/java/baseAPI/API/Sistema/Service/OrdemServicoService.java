@@ -82,7 +82,7 @@ public class OrdemServicoService {
     }
 
     //atendimento
-    public ResponseEntity<OrdemServicoDTO> NovaOrdemServico(Long idCLiente, Long idColaborador, Aparelho aparelho, String relatoCliente)
+    public ResponseEntity<OrdemServicoDTO> NovaOrdemServico(Long idCLiente, Long idColaborador, Aparelho aparelho, String relatoCliente) throws Exception
      {
         try{
             if(idCLiente != null && idColaborador != null && relatoCliente != null)
@@ -90,26 +90,33 @@ public class OrdemServicoService {
                 if(clienteRepository.existsById(idCLiente))
                 {
                     Cliente cliente = clienteRepository.findById(idCLiente).get();
-                    if(colaboradorRepository.existsById(idColaborador))
+                    if(cliente.getBloqueado() == false)
                     {
-                        Colaborador colaborador = colaboradorRepository.findById(idColaborador).get();
-                        OrdemServico ordemServico = new OrdemServico();
-                        int cod = (int) (10000001 + Math.random() * 89999999);;
-                        String codigo = "OS_"+cod;
-                        ordemServico.setCodigo(codigo);
-                        ordemServico.setDataEntrada(LocalDateTime.now());
-                        ordemServico.setRelatoCliente(relatoCliente);
-                        ordemServico.setCliente(cliente);
-                        ordemServico.setColaborador(colaborador);
-                        ordemServico.setStatusOrdenServico(StatusOrdenServico.ORCAMENTO);
-                        ordemServico.setAparelho(aparelho);
-                        ordemServicoRepository.save(ordemServico);
-                        Backup backup = new Backup();
-                        backup.setAcaoBackup(SelecionarAcaoBackup.NOVO_ORCAMENTO);
-                        backup.setOrdemServico(ordemServico);
-                        backup.setDataEvento(LocalDateTime.now());
-                        backupRepository.save(backup);
-                        return new ResponseEntity<>(CREATED);
+                        if(colaboradorRepository.existsById(idColaborador))
+                        {
+                            Colaborador colaborador = colaboradorRepository.findById(idColaborador).get();
+                            OrdemServico ordemServico = new OrdemServico();
+                            int cod = (int) (10000001 + Math.random() * 89999999);;
+                            String codigo = "OS_"+cod;
+                            ordemServico.setCodigo(codigo);
+                            ordemServico.setDataEntrada(LocalDateTime.now());
+                            ordemServico.setRelatoCliente(relatoCliente);
+                            ordemServico.setCliente(cliente);
+                            ordemServico.setColaborador(colaborador);
+                            ordemServico.setStatusOrdenServico(StatusOrdenServico.ORCAMENTO);
+                            ordemServico.setAparelho(aparelho);
+                            ordemServicoRepository.save(ordemServico);
+                            Backup backup = new Backup();
+                            backup.setAcaoBackup(SelecionarAcaoBackup.NOVO_ORCAMENTO);
+                            backup.setOrdemServico(ordemServico);
+                            backup.setDataEvento(LocalDateTime.now());
+                            backupRepository.save(backup);
+                            return new ResponseEntity<>(CREATED);
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("Usuário bloqueado por não pagamento e não retirada de Ordem de Serviço anterior");
                     }
                 }
             }
@@ -200,10 +207,6 @@ public class OrdemServicoService {
         return null;
     }
 
-
-
-    //tec
-    //finalizar valor = valor total reparo + 30%
     public ResponseEntity<OrdemServicoDTO> FinalizarReparoOrdemServico(Long idOrdemServico)
     {
         try{
@@ -275,8 +278,31 @@ public class OrdemServicoService {
         return null;
     }
 
-    //OS recusado -> set true finalizado, data recusado
-    //condicional adicional nos metodos se finalizado retorna erro
+    //atendimento
+    public ResponseEntity<OrdemServicoDTO> ProdutoNaoRetirado(String codigo) throws Exception
+    {
+        try
+        {
+            if(ordemServicoRepository.existsBycodigo(codigo))
+            {
+                OrdemServico ordemServico = ordemServicoRepository.findBycodigo(codigo);
+                ordemServico.setStatusOrdenServico(StatusOrdenServico.PRODUTO_NAO_ENTREGUE);
+                if(clienteRepository.existsById(ordemServico.getCliente().getId()))
+                {
+                    Cliente cliente = clienteRepository.findById(ordemServico.getCliente().getId()).get();
+                    cliente.setBloqueado(true);
+                    clienteRepository.save(cliente);
+                    ordemServicoRepository.save(ordemServico);
+                }
+            }
+            return new ResponseEntity<>(OK);
+        }
+        catch (Exception e)
+        {
+            throw new Exception("erro ao deletar");
+        }
+    }
+
     public ResponseEntity<OrdemServicoDTO> DeletarOrdemServico(Long id) throws Exception
     {
         try

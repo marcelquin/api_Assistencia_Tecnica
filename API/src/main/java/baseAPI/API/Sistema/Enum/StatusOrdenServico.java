@@ -7,5 +7,6 @@ public enum StatusOrdenServico {
     APROVADO,
     RECUSADO,
     AGUARDANDO_RETIRADA,
+    PRODUTO_NAO_ENTREGUE,
     PRODUTO_ENTREGUE;
 }
